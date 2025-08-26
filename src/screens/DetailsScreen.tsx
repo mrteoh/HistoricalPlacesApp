@@ -1,17 +1,32 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, Image, ScrollView, Switch } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleVisited } from "../store/visitedSlice";
+import { RootState } from "../store/store";
 
 type RootStackParamList = {
   Home: undefined;
-  Details: { name: string; description: string; image?: string };
+  Details: { id: number; name: string; description: string; image?: string };
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, "Details">;
 
 export default function DetailsScreen({ route }: Props) {
-  const { name, description, image } = route.params;
-  const [visited, setVisited] = useState(false);
+  const { id, name, description, image } = route.params; // include id
+  const dispatch = useDispatch();
+  
+  // Get visited status from Redux
+  const visitedPlaces = useSelector((state: RootState) => state.places);
+
+  //bind to redux
+  const visited = visitedPlaces?.places.find((p) => p.id === id)?.visited;
+  console.log('visited',visited)
+
+  // Handler to toggle visited status
+  const handleToggleVisited = () => {
+    dispatch(toggleVisited(id));
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -24,7 +39,7 @@ export default function DetailsScreen({ route }: Props) {
         <View style={styles.switchContainer}>
           <Switch
             value={visited}
-            onValueChange={(val) => setVisited(val)}
+            onValueChange={handleToggleVisited}
             thumbColor={visited ? "#4CAF50" : "#f44336"}
             trackColor={{ false: "#ccc", true: "#81C784" }}
           />
@@ -65,11 +80,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   switchWrapper: {
-    width: "100%",             // take full row width
-    alignItems: "flex-end",    // push content to right
+    width: "100%",
+    alignItems: "flex-end",
   },
   switchContainer: {
-    flexDirection: "row",      // side by side
+    flexDirection: "row",
     alignItems: "center",
   },
   switchLabel: {
@@ -77,5 +92,4 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginLeft: 10,
   },
-
 });

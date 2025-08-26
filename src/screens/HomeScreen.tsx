@@ -1,5 +1,8 @@
 // src/screens/HomeScreen.tsx
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store/store"; // adjust the path to your store
+
 import {
   View,
   Text,
@@ -12,6 +15,7 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
+import { toggleVisited } from "../store/placesSlice";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -23,6 +27,7 @@ type Place = {
   name: string;
   description: string;
   image?: string;
+  visited: boolean;
 };
 
 // mock data (fallback)
@@ -60,8 +65,27 @@ const mockPlaces: Place[] = [
 export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const [places, setPlaces] = useState<Place[]>([]);
+
+  // Dispatch places to Redux when loaded
+  useEffect(() => {
+    if (places.length > 0) {
+      // Add visited: false to each place before dispatching
+      const placesWithVisited = places.map(place => ({
+        ...place,
+        visited: true,
+      }));
+      dispatch({ type: "places/setPlaces", payload: placesWithVisited });
+    }
+  }, [places, dispatch]);
+
   const [search, setSearch] = useState("");
   const [visitedPlaces, setVisitedPlaces] = useState<{ [key: string]: boolean }>({});
+
+  const dispatch = useDispatch();
+
+  // Access Redux store
+  const reduxVisitedPlaces = useSelector((state: RootState) => state.places);
+  console.log('reduxVisitedPlaces',reduxVisitedPlaces)  
 
   useEffect(() => {
     fetch("http://localhost:3001/api/getplaces")
@@ -78,26 +102,37 @@ export default function HomeScreen() {
     place.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Toggle visited status
-  const toggleVisited = (id: string) => {
-    setVisitedPlaces((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Historical Places in Malaysia</Text>
 
       {/* 🔍 Search Box */}
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search places..."
-        value={search}
-        onChangeText={setSearch}
-      />
-
+      
+      <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+        <TextInput
+          style={[styles.searchInput, { flex: 1 }]}
+          placeholder="Search places..."
+          value={search}
+          onChangeText={setSearch}
+        />
+        <TouchableOpacity
+          style={{
+            marginLeft: 8,
+            backgroundColor: "#007AFF",
+            paddingVertical: 10,
+            paddingHorizontal: 16,
+            borderRadius: 8,
+          }}
+          onPress={() => {
+            if (filteredPlaces.length > 0) {
+              const randomIndex = Math.floor(Math.random() * filteredPlaces.length);
+              setSearch(filteredPlaces[randomIndex].name);
+            }
+          }}
+        >
+          <Text style={{ color: "#fff", fontWeight: "bold" }}>Suggestion</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={filteredPlaces}
         keyExtractor={(item, index) => item?.id?.toString() ?? index.toString()}
@@ -106,6 +141,7 @@ export default function HomeScreen() {
             style={styles.card}
             onPress={() =>
               navigation.navigate("Details", {
+                id: item.id,
                 name: item.name,
                 description: item.description,
                 image:
@@ -123,7 +159,7 @@ export default function HomeScreen() {
             {/* Visited label */}
             <View style={styles.visitedContainer}>
               <Text style={styles.visitedLabel}>
-                {visitedPlaces[item.id ?? item.name] ? "✅ Visited" : "❌ Not Visited"}
+                {(reduxVisitedPlaces.places as Place[]).find((p: Place) => p.id === item.id)?.visited ? "✅ Visited" : "❌ Not Visited"}
               </Text>
             </View>
 
