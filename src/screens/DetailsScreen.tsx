@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Image, ScrollView, Switch } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleVisited } from "../store/visitedSlice";
+import { toggleVisited } from "../store/placesSlice";
 import { RootState } from "../store/store";
 
 type RootStackParamList = {
@@ -21,11 +21,10 @@ export default function DetailsScreen({ route }: Props) {
 
   //bind to redux
   const visited = visitedPlaces?.places.find((p) => p.id === id)?.visited;
-  console.log('visited',visited)
 
   // Handler to toggle visited status
   const handleToggleVisited = () => {
-    dispatch(toggleVisited(id));
+    dispatch(toggleVisited({ id, visited: !visited }));
   };
 
   return (

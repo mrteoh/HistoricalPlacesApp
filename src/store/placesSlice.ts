@@ -23,6 +23,14 @@ const placesSlice = createSlice({
     setPlaces(state, action: PayloadAction<Place[]>) {
       state.places = action.payload;
     },
+    toggleVisited(state, action: PayloadAction<{ id: string; visited: boolean }>) {
+      const { id } = action.payload;
+      const place = state.places.find((p) => p.id === id);
+
+      if (place) {
+      place.visited = !place.visited;
+      }
+    },
 
   },
 });

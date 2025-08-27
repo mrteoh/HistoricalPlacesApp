@@ -15,7 +15,6 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
-import { toggleVisited } from "../store/placesSlice";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -32,34 +31,78 @@ type Place = {
 
 // mock data (fallback)
 const mockPlaces: Place[] = [
-  {
-    name: "A Famosa",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/3/3a/Melaka_A_Famosa_Fort.JPG",
-    description:
-      "A Famosa is a Portuguese fortress located in Malacca, built in 1511. It is among the oldest surviving European architectural remains in Asia.",
-  },
-  {
-    name: "St. Paul’s Hill (Bukit St. Paul)",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/f/f4/St._Paul%27s_Church%2C_Malacca.jpg",
-    description:
-      "St. Paul’s Hill in Malacca features the ruins of St. Paul’s Church, originally built by the Portuguese in 1521.",
-  },
-  {
-    name: "Kellie’s Castle",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/8/86/Kellie%27s_Castle%2C_Batu_Gajah%2C_Perak.jpg",
-    description:
-      "Located in Batu Gajah, Perak, Kellie’s Castle is an unfinished mansion built by Scottish planter William Kellie Smith in the early 20th century.",
-  },
-  {
-    name: "Sultan Abdul Samad Building",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/1/16/Sultan_Abdul_Samad_Building_2016.jpg",
-    description:
-      "An iconic landmark in Kuala Lumpur, built in 1897 during British rule, showcasing Indo-Saracenic architecture.",
-  },
+    {
+        "id": 0,
+        "name": "A Famosa",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "A Famosa is a Portuguese fortress located in Malacca, built in 1511. It is among the oldest surviving European architectural remains in Asia."
+    },
+    {
+        "id": 1,
+        "name": "St. Paul’s Hill (Bukit St. Paul)",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "St. Paul’s Hill in Malacca features the ruins of St. Paul’s Church, originally built by the Portuguese in 1521."
+    },
+    {
+        "id": 2,
+        "name": "Kellie’s Castle",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "Located in Batu Gajah, Perak, Kellie’s Castle is an unfinished mansion built by Scottish planter William Kellie Smith in the early 20th century."
+    },
+    {
+        "id": 3,
+        "name": "Sultan Abdul Samad Building",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "An iconic landmark in Kuala Lumpur, built in 1897 during British rule, showcasing Indo-Saracenic architecture."
+    },
+    {
+        "id": 4,
+        "name": "Christ Church Melaka",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "Built in 1753 by the Dutch, Christ Church is one of the oldest functioning Protestant churches in Malaysia."
+    },
+    {
+        "id": 5,
+        "name": "The Stadthuys",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "Constructed in 1650 by the Dutch, the Stadthuys served as the administrative center of Malacca."
+    },
+    {
+        "id": 6,
+        "name": "Fort Cornwallis",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "An 18th-century star-shaped fort built by Captain Francis Light in George Town, Penang."
+    },
+    {
+        "id": 7,
+        "name": "Istana Lama Seri Menanti",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "A wooden royal palace in Negeri Sembilan, built in 1908 without the use of nails, showcasing Minangkabau architecture."
+    },
+    {
+        "id": 8,
+        "name": "Fort Margherita",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "Built in 1879 by Charles Brooke, the White Rajah of Sarawak, to guard Kuching from pirates."
+    },
+    {
+        "id": 9,
+        "name": "Cheong Fatt Tze Mansion (Blue Mansion)",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "A 19th-century Chinese courtyard house in George Town, Penang, blending Eastern and Western architecture."
+    },
+    {
+        "id": 10,
+        "name": "Merdeka Square (Dataran Merdeka)",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "Historic site in Kuala Lumpur where Malaysia declared independence on August 31, 1957."
+    },
+    {
+        "id": 11,
+        "name": "Batu Caves Temple",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEtVFaLMVljG9ZoyMTvMGj11TOIa60MStJ7Q&s",
+        "description": "A Hindu temple and shrine located in limestone caves near Kuala Lumpur, famous for the giant Lord Murugan statue."
+    }
 ];
 
 export default function HomeScreen() {
@@ -72,20 +115,18 @@ export default function HomeScreen() {
       // Add visited: false to each place before dispatching
       const placesWithVisited = places.map(place => ({
         ...place,
-        visited: true,
+        visited: false,   //default
       }));
-      dispatch({ type: "places/setPlaces", payload: placesWithVisited });
+      dispatch({ type: "places/setPlaces", payload: placesWithVisited });     //save in store
     }
   }, [places, dispatch]);
 
   const [search, setSearch] = useState("");
-  const [visitedPlaces, setVisitedPlaces] = useState<{ [key: string]: boolean }>({});
 
   const dispatch = useDispatch();
 
   // Access Redux store
-  const reduxVisitedPlaces = useSelector((state: RootState) => state.places);
-  console.log('reduxVisitedPlaces',reduxVisitedPlaces)  
+  const reduxPlaces = useSelector((state: RootState) => state.places);
 
   useEffect(() => {
     fetch("http://localhost:3001/api/getplaces")
@@ -109,20 +150,46 @@ export default function HomeScreen() {
       {/* 🔍 Search Box */}
       
       <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
-        <TextInput
-          style={[styles.searchInput, { flex: 1 }]}
-          placeholder="Search places..."
-          value={search}
-          onChangeText={setSearch}
-        />
+        {/* 🔍 Search Input */}
+        <View style={{ flex: 1, position: "relative" }}>
+          <TextInput
+            style={[styles.searchInput, { paddingRight: 36, marginBottom: 0, height: 44 }]} // 👈 height + remove marginBottom
+            placeholder="Search places..."
+            value={search}
+            onChangeText={setSearch}
+          />
+          {search.length > 0 && (
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 0,
+                bottom: 0,
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                width: 24,
+              }}
+              onPress={() => setSearch("")}
+              accessibilityLabel="Clear search"
+            >
+              <Text style={{ fontSize: 15, color: "#888" }}>✕</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* 🎲 Suggestion Button */}
         <TouchableOpacity
           style={{
             marginLeft: 8,
-            backgroundColor: "#007AFF",
+            backgroundColor: search !== "" ? "#ccc" : "#007AFF",
             paddingVertical: 10,
             paddingHorizontal: 16,
             borderRadius: 8,
+            height: 44, // 👈 match TextInput height
+            justifyContent: "center",
           }}
+          disabled={search !== ""}
           onPress={() => {
             if (filteredPlaces.length > 0) {
               const randomIndex = Math.floor(Math.random() * filteredPlaces.length);
@@ -159,7 +226,7 @@ export default function HomeScreen() {
             {/* Visited label */}
             <View style={styles.visitedContainer}>
               <Text style={styles.visitedLabel}>
-                {(reduxVisitedPlaces.places as Place[]).find((p: Place) => p.id === item.id)?.visited ? "✅ Visited" : "❌ Not Visited"}
+                {(reduxPlaces.places as Place[]).find((p: Place) => p.id === item.id)?.visited ? "✅ Visited" : "❌ Not Visited"}
               </Text>
             </View>
 
