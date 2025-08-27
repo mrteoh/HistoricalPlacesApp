@@ -29,6 +29,7 @@ yarn install
 
 ### Run the App
 yarn ios
+yarn android
 npm start
 
 
